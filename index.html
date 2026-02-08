@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Reflect IQ- learning finger print</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+/* ========== ORIGINAL STYLES ========== */
+body{
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);
+  color:white;
+}
+.container{display:flex;height:100vh;}
+.sidebar{
+  width:240px;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(15px);
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  border-right:1px solid rgba(255,255,255,0.1);
+}
+.sidebar h2{text-align:center;color:#ff4ecd;}
+.sidebar button{
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(45deg,#ff4ecd,#7b2ff7);
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+.sidebar button:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 15px #ff4ecd;
+}
+.content{
+  flex:1;
+  padding:30px;
+  overflow-y:auto;
+}
+.page{display:none;animation:fade 0.4s ease;}
+.active{display:block;}
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;}
+}
+.glass-card{
+  background:rgba(255,255,255,0.07);
+  padding:20px;
+  border-radius:20px;
+  margin-bottom:20px;
+  transition:0.3s;
+}
+.glass-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 0 25px #7b2ff7;
+}
+.primary-btn{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(45deg,#ff4ecd,#7b2ff7);
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+.primary-btn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 20px #ff4ecd;
+}
+.vertical-cards{
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+  width:320px;
+}
+.prof-card{
+  font-size:20px;
+  text-align:center;
+  cursor:pointer;
+}
+.done{color:#00ff99;font-weight:bold;}
+.future{
+  margin-top:20px;
+  padding:15px;
+  background:rgba(255,255,255,0.05);
+  border-left:4px solid #ff4ecd;
+  border-radius:10px;
+}
+
+/* ========== NEW IQ + MENTOR STYLES ========== */
+.chat-box{
+  height:300px;
+  overflow-y:auto;
+  background:black;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+.chat-input{
+  display:flex;
+  gap:10px;
+}
+.chat-input input{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+}
+
+/* ========== FEATURE CARDS ========== */
+.feature-card{
+  background:rgba(255,255,255,0.07);
+  padding:20px;
+  border-radius:20px;
+  margin-bottom:20px;
+  animation:fade 0.5s;
+}
+.feature-card h3{
+  color:#ff4ecd;
+}
+.feature-card ul{
+  list-style:none;
+  padding-left:0;
+}
+.feature-card li{
+  margin:8px 0;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" style="display:flex;justify-content:center;align-items:center;height:100vh;">
+  <div class="glass-card" style="width:350px;text-align:center;">
+    <h2 style="color:#ff4ecd;">🚀 Reflect IQ-learning finger print </h2>
+    <input placeholder="Username" style="width:90%;padding:10px;margin:10px;border-radius:10px;border:none;">
+    <input type="password" placeholder="Password" style="width:90%;padding:10px;margin:10px;border-radius:10px;border:none;">
+    <button class="primary-btn" onclick="enterApp()">Sign In</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="mainApp" class="container" style="display:none;">
+  <div class="sidebar">
+    <h2>Dashboard</h2>
+    <button onclick="showPage('profession')">👤 Profession</button>
+    <button onclick="showPage('courses')">📚 Courses</button>
+    <button onclick="showPage('roadmap')">🗺 Roadmap</button>
+    <button onclick="showPage('streak')">🔥 Streak</button>
+    <button onclick="showPage('iq')">🧠 IQ Engine</button>
+    <button onclick="showPage('mentor')">🤖 AI Mentor</button>
+    <button onclick="showPage('fingerprintPage'); showFingerprint()">🖐 Fingerprint Learning</button>
+    <button onclick="showPage('decayPage'); showDecayPredictor()">⏱ Knowledge Decay Predictor</button>
+    <button onclick="showPage('stressPage'); showStressBuster()">🎮 Weekend Stress Buster</button>
+    <button onclick="showMentorSuggestionPage()">🧑‍🏫 Mentor Guidance</button>
+  </div>
+
+  <div class="content">
+
+    <!-- PROFESSION -->
+    <div id="profession" class="page active">
+      <h1>Select Your Profession</h1>
+      <div class="vertical-cards">
+        <div class="glass-card prof-card" onclick="selectProfession('school')">🎒 School Student</div>
+        <div class="glass-card prof-card" onclick="selectProfession('college')">🎓 College Student</div>
+        <div class="glass-card prof-card" onclick="selectProfession('professional')">💼 Working Professional</div>
+      </div>
+    </div>
+
+    <!-- COURSES -->
+    <div id="courses" class="page">
+      <h1>AI Learning Path</h1>
+      <div id="courseContainer"></div>
+    </div>
+
+    <!-- ROADMAP -->
+    <div id="roadmap" class="page">
+      <div id="roadmapContainer" class="glass-card">
+        <h2>No Course Selected</h2>
+      </div>
+    </div>
+
+    <!-- STREAK -->
+    <div id="streak" class="page">
+      <div class="glass-card" style="text-align:center;max-width:500px;">
+        <h2>🔥 Learning Streak Tracker</h2>
+
+        <div style="position:relative;width:180px;height:180px;margin:20px auto;">
+          <svg width="180" height="180">
+            <circle cx="90" cy="90" r="70"
+              stroke="#333" stroke-width="15" fill="none"/>
+            <circle id="ring"
+              cx="90" cy="90" r="70"
+              stroke="#ff4ecd" stroke-width="15"
+              fill="none"
+              stroke-dasharray="440"
+              stroke-dashoffset="440"
+              stroke-linecap="round"
+              transform="rotate(-90 90 90)"/>
+          </svg>
+
+          <div style="position:absolute;top:50%;left:50%;
+          transform:translate(-50%,-50%);
+          font-size:26px;font-weight:bold;">
+            <span id="streakCount">0</span> 🔥
+          </div>
+        </div>
+
+        <h3 id="levelText">Level: Beginner</h3>
+        <p id="xpText">XP: 0</p>
+
+        <button class="primary-btn" onclick="markToday()">
+          Mark Today Completed
+        </button>
+
+        <div class="future">
+          <h3>💡 AI Suggestion</h3>
+          <p id="streakAdvice">Start your streak journey today!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- IQ ENGINE -->
+    <div id="iq" class="page">
+      <div class="glass-card" style="text-align:center;">
+        <h2>🧠 Auto IQ Engine</h2>
+        <div style="position:relative;width:200px;height:200px;margin:20px auto;">
+          <svg width="200" height="200">
+            <circle cx="100" cy="100" r="80" stroke="#333" stroke-width="15" fill="none"/>
+            <circle id="iqRing" cx="100" cy="100" r="80" stroke="#ff4ecd" stroke-width="15" fill="none" stroke-dasharray="502" stroke-dashoffset="502" stroke-linecap="round" transform="rotate(-90 100 100)"/>
+          </svg>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;">
+            <span id="iqScore">100</span>
+          </div>
+        </div>
+        <p id="cciDisplay">CCI: 0%</p>
+        <p id="decayDisplay">Knowledge Strength: 100%</p>
+        <!-- IQ Radar Chart -->
+<canvas id="iqChart" width="400" height="400"
+  style="background:#1e1e2f;border-radius:15px;margin-top:20px;">
+</canvas>
+
+
+      </div>
+    </div>
+
+    <!-- AI MENTOR -->
+    <div id="mentor" class="page">
+      <div class="glass-card">
+        <h2>🤖 AI Mentor</h2>
+        <div class="chat-box" id="chatBox"></div>
+        <div class="chat-input">
+          <input id="chatInput" placeholder="Ask your AI mentor...">
+          <button class="primary-btn" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINGERPRINT LEARNING -->
+    <div id="fingerprintPage" class="page"></div>
+
+    <!-- KNOWLEDGE DECAY PREDICTOR -->
+    <div id="decayPage" class="page"></div>
+
+    <!-- WEEKEND STRESS BUSTER -->
+    <div id="stressPage" class="page"></div>
+
+    <!-- MENTOR SUGGESTION -->
+    <div id="mentorSuggestionPage" class="page">
+      <div id="mentorSuggestion"></div>
+    </div>
+
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<script>
+  let iqChart;
+
+
+/* ========== ORIGINAL SCRIPT ========== */
+let selectedCourse="";
+let totalModules=4;
+let completed=0;
+
+function enterApp(){
+  loginPage.style.display="none";
+  mainApp.style.display="flex";
+}
+
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  // When IQ page opens
+  if(id === "iq"){
+    calculateIQ();
+
+    // Small delay so DOM fully loads
+    setTimeout(() => {
+      generateIQAnalysis();
+    }, 100);
+  }
+}
+
+
+function selectProfession(type){
+  showPage("courses");
+  loadCourses(type);
+}
+
+/* ========== UPDATED loadCourses WITH LINKS ========== */
+function loadCourses(type){
+  const container=document.getElementById("courseContainer");
+  container.innerHTML="";
+
+  let courses=[];
+  if(type==="school"){
+    courses=[
+      {name:"AI Basics for Beginners",youtube:"https://www.youtube.com/embed/2ePf9rue1Ao",coursera:"https://www.coursera.org/learn/ai-for-everyone",udemy:"https://www.udemy.com/course/ai-for-beginners/"},
+      {name:"Intro to Python Coding",youtube:"https://www.youtube.com/embed/_uQrJ0TkZlc",coursera:"https://www.coursera.org/learn/python",udemy:"https://www.udemy.com/course/python-for-beginners/"},
+    ];
+  }
+  else if(type==="college"){
+    courses=[
+      {name:"Machine Learning Mastery",youtube:"https://www.youtube.com/embed/GwIo3gDZCVQ",coursera:"https://www.coursera.org/learn/machine-learning",udemy:"https://www.udemy.com/course/machinelearning/"},
+      {name:"Deep Learning & Neural Nets",youtube:"https://www.youtube.com/embed/aircAruvnKk",coursera:"https://www.coursera.org/specializations/deep-learning",udemy:"https://www.udemy.com/course/deeplearning/"},
+    ];
+  }
+  else{
+    courses=[
+      {name:"AI for Business Leaders",youtube:"https://www.youtube.com/embed/2ePf9rue1Ao",coursera:"https://www.coursera.org/learn/ai-business",udemy:"https://www.udemy.com/course/ai-for-business/"},
+      {name:"Generative AI & LLMs",youtube:"https://www.youtube.com/embed/kCc8FmEb1nY",coursera:"https://www.coursera.org/learn/generative-ai",udemy:"https://www.udemy.com/course/generative-ai/"},
+    ];
+  }
+
+  courses.forEach(course=>{
+    container.innerHTML+=`
+      <div class="glass-card">
+        <h3>${course.name}</h3>
+        <iframe width="100%" height="250" src="${course.youtube}" frameborder="0" allowfullscreen></iframe>
+        <p style="margin-top:10px;">📚 Additional Resources:</p>
+        <ul>
+          <li><a href="${course.coursera}" target="_blank">Coursera</a></li>
+          <li><a href="${course.udemy}" target="_blank">Udemy</a></li>
+        </ul>
+        <button class="primary-btn" onclick="startCourse('${course.name}')">Start Learning</button>
+      </div>
+    `;
+  });
+}
+function startCourse(name){
+  selectedCourse=name;
+  generateRoadmap();
+  showPage("roadmap");
+}
+/* ========== UPDATED ROADMAP ========== */
+
+function generateRoadmap(){
+  completed=0;
+  document.getElementById("roadmapContainer").innerHTML=`
+    <h2>${selectedCourse} Roadmap</h2>
+    <div style="background:#333;border-radius:20px;overflow:hidden;margin-bottom:15px;">
+      <div id="progressBar" style="height:15px;width:0%;background:linear-gradient(45deg,#ff4ecd,#7b2ff7);transition:0.5s;"></div>
+    </div>
+    <p onclick="complete(this)">Module 1 - Core Foundations</p>
+    <p onclick="complete(this)">Module 2 - Practical Projects</p>
+    <p onclick="complete(this)">Module 3 - Real-world Implementation</p>
+    <p onclick="complete(this)">Final Capstone Project</p>
+    <div class="future">
+      <h3>🚀 Future Career Path Suggestions</h3>
+      <ul>
+        <li>Advanced Machine Learning</li>
+        <li>AI Research Engineer</li>
+        <li>Data Scientist Certification</li>
+        <li>Generative AI Specialist</li>
+        <li>AI Startup Founder Path</li>
+      </ul>
+    </div>
+  `;
+}
+
+function complete(el){
+  if(!el.classList.contains("done")){
+    el.classList.add("done");
+    el.innerHTML+=" ✅";
+    completed++;
+    let percent=(completed/totalModules)*100;
+    document.getElementById("progressBar").style.width=percent+"%";
+  }
+  if(completed===totalModules){
+    motivationPopup();
+  }
+}
+
+function motivationPopup(){
+  const quotes=[
+    "🔥 You are building your AI Empire!",
+    "🚀 Next Stop: AI Expert Level!",
+    "💜 Consistency beats talent!",
+    "🌟 Future Tech Leader in Making!"
+  ];
+  let random=quotes[Math.floor(Math.random()*quotes.length)];
+  const box=document.createElement("div");
+  box.style.position="fixed";
+  box.style.top="50%";
+  box.style.left="50%";
+  box.style.transform="translate(-50%,-50%)";
+  box.style.background="black";
+  box.style.padding="40px";
+  box.style.borderRadius="20px";
+  box.style.boxShadow="0 0 40px #ff4ecd";
+  box.innerHTML=`<h2>${random}</h2>`;
+  document.body.appendChild(box);
+  setTimeout(()=>box.remove(),3000);
+}
+
+/* ========== STREAK + XP RING ========== */
+let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
+let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
+
+function updateStreakUI(){
+  document.getElementById("streakCount").innerText = streak;
+  document.getElementById("xpText").innerText = "XP: " + xp;
+  let offset = 440 - (streak*20);
+  if(offset<0) offset=0;
+  document.getElementById("ring").style.strokeDashoffset=offset;
+  let level="Beginner";
+  if(streak>=5) level="Consistent Learner";
+  if(streak>=15) level="Focused Achiever";
+  if(streak>=30) level="AI Master";
+  document.getElementById("levelText").innerText="Level: "+level;
+
+  let advice="Consistency builds intelligence.";
+  if(streak<3) advice="Try learning 20 mins daily.";
+  else if(streak<10) advice="Momentum is building!";
+  else if(streak<20) advice="Your neural strength increasing!";
+  else advice="Elite discipline achieved!";
+  document.getElementById("streakAdvice").innerText=advice;
+
+  localStorage.setItem("streak",streak);
+  localStorage.setItem("xp",xp);
+
+  calculateIQ(); // Update IQ on streak change
+}
+
+function markToday(){
+  streak++;
+  xp+=10;
+  updateStreakUI();
+}
+
+updateStreakUI();
+
+/* ========== AUTO IQ ENGINE ========== */
+
+letiqChart = null;   
+function calculateIQ(){
+
+  let baseIQ = 100;
+  let streakBonus = streak * 2;
+  let xpBonus = Math.floor(xp / 20);
+
+  let finalIQ = baseIQ + streakBonus + xpBonus;
+
+  if(finalIQ > 160) finalIQ = 160;
+
+  document.getElementById("iqScore").innerText = finalIQ;
+
+  /* ==== IQ RING UPDATE ==== */
+  let maxCircle = 502; // full circumference
+  let progress = (finalIQ / 160) * maxCircle;
+  document.getElementById("iqRing").style.strokeDashoffset = maxCircle - progress;
+
+  /* ==== CCI (Consistency Cognitive Index) ==== */
+  let cci = Math.min(100, streak * 5);
+  document.getElementById("cciDisplay").innerText = "CCI: " + cci + "%";
+
+  /* ==== Knowledge Strength ==== */
+  let knowledge = 100 - (streak * 2);
+  if(knowledge < 50) knowledge = 50;
+  document.getElementById("decayDisplay").innerText =
+    "Knowledge Strength: " + knowledge + "%";
+}
+
+
+function generateIQAnalysis(){
+
+  if(iqChart){
+    iqChart.destroy();
+  }
+
+  const iq = parseInt(document.getElementById("iqScore").innerText);
+
+  const analytical = Math.min(100, iq * 0.6);
+  const problemSolving = Math.min(100, iq * 0.55);
+  const creativity = Math.min(100, iq * 0.5);
+  const decisionMaking = Math.min(100, iq * 0.52);
+
+  const ctx = document.getElementById("iqChart").getContext("2d");
+
+  iqChart = new Chart(ctx,{
+    type:'radar',
+    data:{
+      labels:[
+        '📊 Analytical',
+        '🧩 Problem Solving',
+        '🎨 Creativity',
+        '⚖️ Decision Making'
+      ],
+      datasets:[{
+        label:'Cognitive Strength',
+        data:[
+          analytical,
+          problemSolving,
+          creativity,
+          decisionMaking
+        ],
+        backgroundColor:'rgba(123,47,247,0.3)',
+        borderColor:'#ff4ecd',
+        borderWidth:3,
+        pointBackgroundColor:'#ff4ecd',
+        pointBorderColor:'#fff'
+      }]
+    },
+    options:{
+      responsive:true,
+      animation:{
+        duration:1500,
+        easing:'easeOutQuart'
+      },
+      scales:{
+        r:{
+          beginAtZero:true,
+          max:100,
+          grid:{color:"#444"},
+          pointLabels:{color:"white",font:{size:14}},
+          ticks:{color:"white"}
+        }
+      },
+      plugins:{
+        legend:{display:false}
+      }
+    }
+  });
+
+}
+
+
+/*========AI CHART=====*/
+function sendMessage() {
+  let input = document.getElementById("chatInput");
+  let chatBox = document.getElementById("chatBox");
+  let userText = input.value.trim();
+  if(userText === "") return;
+
+  // Show user message
+  chatBox.innerHTML += `<p><b>You:</b> ${userText}</p>`;
+  input.value = "";
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  // Show typing indicator
+  chatBox.innerHTML += `<p id="typing"><i>🤖 AI is typing...</i></p>`;
+  chatBox.scrollTop = chatBox.scrollHeight;
+
+  setTimeout(() => {
+    document.getElementById("typing").remove();
+
+    // Generate AI response
+    let aiText = generateAIResponse(userText);
+
+    // Display AI response
+    chatBox.innerHTML += `<p style="color:#ff4ecd"><b>AI:</b> ${aiText}</p>`;
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }, 1500 + Math.random() * 1000); // random delay 1.5-2.5s
+}
+
+// AI response generator using IQ, streak, completed modules, weak modules
+function generateAIResponse(input) {
+  input = input.toLowerCase();
+
+  // Fetch current IQ, streak, and completed modules dynamically
+  let currentIQ = parseInt(document.getElementById("iqScore").innerText);
+  let currentStreak = streak;
+  let completedModules = completed;
+  let weakModulesCompleted = document.querySelectorAll("#roadmapContainer .done.weak").length;
+
+  // Encouragement messages based on streak & IQ
+  let encouragement = "";
+  if(currentStreak < 5) encouragement = "Let's build a habit! Small steps daily.";
+  else if(currentStreak < 15) encouragement = "Awesome momentum! Keep going!";
+  else encouragement = "🔥 You're excelling! Keep pushing your AI skills!";
+
+  // Advice based on keywords
+  if(input.includes("iq") || input.includes("score")) 
+      return `Your current IQ is ${currentIQ}. ${encouragement}`;
+  if(input.includes("streak")) 
+      return `You have a streak of ${currentStreak} days with ${completedModules} modules completed. ${encouragement}`;
+  if(input.includes("course") || input.includes("learning")) 
+      return `Currently learning: ${selectedCourse}. Weak modules completed: ${weakModulesCompleted}. Focus on challenging modules for growth.`;
+  if(input.includes("tips") || input.includes("advice")) 
+      return `Tip: Mark weak modules, stay consistent, and challenge yourself daily. ${encouragement}`;
+  if(input.includes("future") || input.includes("career")) 
+      return "Based on your progress, consider: Advanced Machine Learning, AI Research Engineer, or Generative AI specialization.";
+
+  // Default response
+  return `I see! ${encouragement} Keep focusing on your current modules.`;
+}
+
+/* ========== FINGERPRINT LEARNING SIMULATION ========== */
+function showFingerprint(){
+  const page = document.getElementById("fingerprintPage");
+
+  page.innerHTML = `
+    <div class="feature-card" style="padding:20px; animation:fade 0.5s;">
+      <h3>🖐 Fingerprint Learning Dashboard</h3>
+      <p>Personalized Learning Insights:</p>
+
+      <!-- Radar Chart for Learning Strength -->
+      <canvas id="fingerChart" width="400" height="400" 
+        style="background:#1e1e2f; border-radius:15px; margin-top:15px;"></canvas>
+
+      <!-- Line Chart for Consistency (CCI) -->
+      <canvas id="cciChart" width="400" height="200" 
+        style="background:#1e1e2f; border-radius:15px; margin-top:20px;"></canvas>
+    </div>
+  `;
+
+  initCharts();
+}
+
+function initCharts(){
+  // Radar Chart
+  new Chart(document.getElementById('fingerChart'),{
+    type:'radar',
+    data:{
+      labels:['Logic','Speed','Memory','Consistency'],
+      datasets:[{
+        label:'Your Skills',
+        data:[85,70,60,75],
+        backgroundColor:'rgba(255,78,205,0.4)',
+        borderColor:'#ff4ecd',
+        borderWidth:2,
+        pointBackgroundColor:'#ff4ecd',
+        pointBorderColor:'#fff'
+      }]
+    },
+    options:{
+      responsive:true,
+      scales:{r:{grid:{color:"#444"},pointLabels:{color:"white"}}},
+      plugins:{legend:{display:false}},
+      animation:{duration:1500,easing:'easeOutQuart'}
+    }
+  });
+
+  // Line Chart
+  new Chart(document.getElementById('cciChart'),{
+    type:'line',
+    data:{
+      labels:['Week 1','Week 2','Week 3','Week 4'],
+      datasets:[{
+        data:[60,68,72,80],
+        borderColor:'#7b2ff7',
+        backgroundColor:'rgba(123,47,247,0.2)',
+        fill:true,
+        borderWidth:3,
+        tension:0.4,
+        pointBackgroundColor:'#ff4ecd',
+        pointBorderColor:'#fff'
+      }]
+    },
+    options:{
+      responsive:true,
+      scales:{
+        x:{ticks:{color:"white"}, grid:{color:"#444"}},
+        y:{ticks:{color:"white"}, grid:{color:"#444"}}
+      },
+      plugins:{legend:{display:false}},
+      animation:{duration:1500,easing:'easeOutQuart'}
+    }
+  });
+}
+
+/*========= decay precictor======*/
+
+function showDecayPredictor() {
+  const page = document.getElementById("decayPage");
+
+  // Topics, forgetting %, and micro revision video links
+  const topics = [
+    {name:"Python Basics", forget:15, icon:"🐍", video:"https://www.youtube.com/embed/_uQrJ0TkZlc"},
+    {name:"AI Fundamentals", forget:25, icon:"🤖", video:"https://www.youtube.com/embed/2ePf9rue1Ao"},
+    {name:"ML Algorithms", forget:40, icon:"📊", video:"https://www.youtube.com/embed/GwIo3gDZCVQ"},
+    {name:"Neural Networks", forget:30, icon:"🧠", video:"https://www.youtube.com/embed/aircAruvnKk"},
+    {name:"Data Preprocessing", forget:20, icon:"🗂", video:"https://www.youtube.com/embed/4vryPwLtjIg"}
+  ];
+
+  // Create HTML list with video buttons
+  let topicList = topics.map((t, index) => 
+    `<li style="margin-bottom:10px;">
+       ${t.icon} <b>${t.name}</b> - Forgetting: <b>${t.forget}%</b>
+       <br>
+       <button class="primary-btn" style="margin-top:5px;" onclick="showMicroVideo('${t.video}', '${t.name}')">
+         ▶ Watch Micro Revision
+       </button>
+     </li>`
+  ).join("");
+
+  page.innerHTML = `
+    <div class="feature-card" style="padding:20px; animation:fade 0.5s;">
+      <h3>⏱ Knowledge Decay Predictor</h3>
+      <p>Focus on micro-revisions for high-risk topics:</p>
+      <ul style="color:#ff4ecd;">
+        ${topicList}
+      </ul>
+
+      <!-- Bar chart for forgetting probability -->
+      <canvas id="decayChart" width="400" height="250"
+        style="background:#1e1e2f; border-radius:15px;"></canvas>
+
+      <!-- Micro revision video container -->
+      <div id="microVideo" style="margin-top:20px;"></div>
+    </div>
+  `;
+
+  // Bar chart for forgetting probability
+  new Chart(document.getElementById('decayChart'), {
+    type:'bar',
+    data:{
+      labels: topics.map(t => t.name),
+      datasets:[{
+        label:'Forgetting Probability (%)',
+        data: topics.map(t => t.forget),
+        backgroundColor:'rgba(255,78,205,0.6)',
+        borderColor:'#ff4ecd',
+        borderWidth:2
+      }]
+    },
+    options:{
+      responsive:true,
+      scales:{
+        x:{ticks:{color:"white"}, grid:{color:"#444"}},
+        y:{ticks:{color:"white"}, grid:{color:"#444"}, beginAtZero:true, max:50}
+      },
+      plugins:{legend:{display:false}},
+      animation:{duration:1500, easing:'easeOutQuart'}
+    }
+  });
+}
+
+// Function to show micro revision video
+function showMicroVideo(url, topicName){
+  const container = document.getElementById("microVideo");
+  container.innerHTML = `
+    <h4 style="color:#ff4ecd;">📹 Micro Revision: ${topicName}</h4>
+    <iframe width="100%" height="250" src="${url}" frameborder="0" allowfullscreen 
+      style="border-radius:15px;"></iframe>
+  `;
+}
+
+
+
+
+/* ========== WEEKEND STRESS BUSTER SIMULATION ========== */
+function showStressBuster() {
+  const page = document.getElementById("stressPage");
+
+  page.innerHTML = `
+    <div class="feature-card" style="padding:20px; animation:fade 0.5s;">
+      <h3>🎮 Weekend Stress Buster</h3>
+      <p>Recharge your brain with games, quizzes & events:</p>
+
+      <!-- Mini Coding Quiz -->
+      <div style="background:#1e1e2f; padding:15px; border-radius:15px; margin:10px 0;">
+        <h4 style="color:#ff4ecd;">📝 Quick Coding Quiz</h4>
+        <p>What does HTML stand for?</p>
+        <button class="primary-btn" onclick="alert('Correct! ✅')">Hyper Text Markup Language</button>
+        <button class="primary-btn" onclick="alert('Oops ❌')">Home Tool Markup Language</button>
+        <button class="primary-btn" onclick="alert('Oops ❌')">Hyperlinks and Text Markup</button>
+      </div>
+
+      <!-- Mini Tic-Tac-Toe Game -->
+      <div style="background:#1e1e2f; padding:15px; border-radius:15px; margin:10px 0;">
+        <h4 style="color:#ff4ecd;">♟ Mini Tic-Tac-Toe</h4>
+        <div id="ticTacToeBoard" style="display:grid;grid-template-columns:repeat(3,50px);gap:5px;"></div>
+        <button class="primary-btn" onclick="initTicTacToe()">Reset Game</button>
+      </div>
+
+      <!-- Hackathon/Event Links -->
+      <div style="background:#1e1e2f; padding:15px; border-radius:15px; margin:10px 0;">
+        <h4 style="color:#ff4ecd;">🚀 Join Hackathons</h4>
+        <p>Participate globally and boost your skills!</p>
+        <button class="primary-btn" onclick="window.open('https://devpost.com/hackathons','_blank')">Go Now</button>
+      </div>
+    </div>
+  `;
+
+  // Initialize Tic-Tac-Toe Board
+  initTicTacToe();
+}
+
+// Mini Tic-Tac-Toe Script
+function initTicTacToe() {
+  const board = document.getElementById("ticTacToeBoard");
+  board.innerHTML = "";
+  let currentPlayer = "X";
+  const cells = Array(9).fill("");
+
+  function checkWinner() {
+    const winCombos = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+    for (let combo of winCombos) {
+      const [a,b,c] = combo;
+      if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+        alert(currentPlayer + " Wins! 🎉");
+        return true;
+      }
+    }
+    if(!cells.includes("")) alert("It's a tie! 🤝");
+    return false;
+  }
+
+  for (let i=0;i<9;i++) {
+    const cell = document.createElement("div");
+    cell.style.width="50px";
+    cell.style.height="50px";
+    cell.style.background="#333";
+    cell.style.display="flex";
+    cell.style.alignItems="center";
+    cell.style.justifyContent="center";
+    cell.style.fontSize="24px";
+    cell.style.cursor="pointer";
+    cell.style.color="#ff4ecd";
+    cell.addEventListener("click",()=>{
+      if(cells[i]==="") {
+        cells[i]=currentPlayer;
+        cell.innerText=currentPlayer;
+        if(!checkWinner()) currentPlayer = currentPlayer==="X"?"O":"X";
+      }
+    });
+    board.appendChild(cell);
+  }
+}
+
+
+/* ========== MENTOR SUGGESTION (VIDEO + SESSION + IQ-based advice) ========== */
+function showMentorSuggestionPage() {
+  showPage('mentorSuggestionPage');
+  const suggestionBox = document.getElementById("mentorSuggestion");
+
+  suggestionBox.innerHTML = `
+    <div class="glass-card" style="padding:20px; animation:fade 0.6s;">
+      <h2 style="color:#ff4ecd;">🧑‍🏫 AI Mentor Guidance</h2>
+      <p>Upload your question or type below to get step-by-step guidance:</p>
+
+      <div style="margin-top:15px;">
+        <textarea id="mentorQuestion" placeholder="Type your question here..." 
+          style="width:100%;padding:10px;border-radius:12px;border:none;resize:none;height:80px;"></textarea>
+        <button class="primary-btn" style="margin-top:10px;" onclick="getMentorAnswer()">
+          💡 Get Answer
+        </button>
+      </div>
+
+      <div id="mentorAnswer" style="margin-top:20px;display:none;animation:fade 0.5s;">
+        <h4>📌 AI Answer:</h4>
+        <p id="answerText" style="color:#00ffcc;font-weight:bold;"></p>
+
+        <div id="mentorVideos" style="margin-top:15px;">
+          <h4>📹 Video References:</h4>
+          <ul id="videoList" style="list-style:none;padding-left:0;"></ul>
+        </div>
+
+        <div style="margin-top:15px;">
+          <h4>🔴 Online Mentor Session:</h4>
+          <p>Need extra help? Join a live mentor: 
+          <a href="https://zoom.us/j/123456789" target="_blank" style="color:#ff4ecd;">Click Here</a></p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// Sample video references for topics (can expand)
+const mentorVideoDB = [
+  {topic:"Python", videos:["https://www.youtube.com/embed/_uQrJ0TkZlc","https://www.youtube.com/embed/rfscVS0vtbw"]},
+  {topic:"Machine Learning", videos:["https://www.youtube.com/embed/GwIo3gDZCVQ","https://www.youtube.com/embed/aircAruvnKk"]},
+  {topic:"AI Fundamentals", videos:["https://www.youtube.com/embed/2ePf9rue1Ao","https://www.youtube.com/embed/4vryPwLtjIg"]}
+];
+
+function getMentorAnswer() {
+  const question = document.getElementById("mentorQuestion").value.trim();
+  if(question === "") {
+    alert("Please type a question first!");
+    return;
+  }
+
+  // Show the answer container
+  const answerDiv = document.getElementById("mentorAnswer");
+  answerDiv.style.display = "block";
+
+  // Fake AI answer generation (you can connect a real model here)
+  const answerText = `✅ Here's a step-by-step answer to your question: "${question}". Follow these steps carefully and practice with examples.`;
+
+  document.getElementById("answerText").innerText = answerText;
+
+  // Clear previous video list
+  const videoList = document.getElementById("videoList");
+  videoList.innerHTML = "";
+
+  // Find topic match (very simple keyword matching)
+  mentorVideoDB.forEach(entry => {
+    if(question.toLowerCase().includes(entry.topic.toLowerCase())) {
+      entry.videos.forEach(v => {
+        const li = document.createElement("li");
+        li.style.marginBottom="10px";
+        li.innerHTML = `
+          🎥 <iframe width="100%" height="200" src="${v}" frameborder="0" allowfullscreen style="border-radius:12px;"></iframe>
+        `;
+        videoList.appendChild(li);
+      });
+    }
+  });
+
+  // If no videos found, suggest a generic mentor video
+  if(videoList.childElementCount === 0) {
+    videoList.innerHTML = `<p style="color:#ff4ecd;">No direct video found. Try searching AI fundamentals or Python tutorials on YouTube!</p>`;
+  }
+
+  // Scroll smoothly to answer
+  answerDiv.scrollIntoView({behavior:"smooth"});
+}
+
+</script>
+</body>
+</html>
+
